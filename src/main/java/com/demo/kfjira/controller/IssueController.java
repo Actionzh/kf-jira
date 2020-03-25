@@ -1,7 +1,7 @@
 package com.demo.kfjira.controller;
 
+import com.demo.kfjira.dto.InternalIssue;
 import com.demo.kfjira.service.IssueService;
-import com.lexon.xlsImport.entity.InternalIssue;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

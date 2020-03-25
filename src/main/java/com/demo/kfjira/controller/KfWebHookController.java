@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Base64;
 import java.util.Map;
 
 @RestController
@@ -23,8 +24,7 @@ public class KfWebHookController {
     @PostMapping(value = "/test")
     @ResponseBody
     public void test(@RequestParam Map<String, Object> params) {
-        LOGGER.info("access my controller===========");
-        LOGGER.info("ticketDTO:" + params.toString());
+        LOGGER.info("access my controller with ticketDTO:" + params.toString());
         webhookService.handleWebhook(params);
     }
 
@@ -54,5 +54,6 @@ public class KfWebHookController {
         System.out.println("1:" + s);
         String s2 = DigestUtils.md5Hex("hui.zhang@linkflowtech.com15846031333f23009c3dddb6c79527384c67f462".getBytes());
         System.out.println("2:" + s2);
+        System.out.println("base64=========" + new String(Base64.getEncoder().encode("success:Initial0".getBytes())));
     }
 }
