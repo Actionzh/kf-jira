@@ -55,5 +55,7 @@ public class KfWebHookController {
         String s2 = DigestUtils.md5Hex("hui.zhang@linkflowtech.com15846031333f23009c3dddb6c79527384c67f462".getBytes());
         System.out.println("2:" + s2);
         System.out.println("base64=========" + new String(Base64.getEncoder().encode("success:Initial0".getBytes())));
+        String base = new String(Base64.getEncoder().encode("hui.zhang@linkflowtech.com/token:3f23009c3dddb6c79527384c67f462".getBytes()));
+        System.out.println("3:" + base);
     }
 }
