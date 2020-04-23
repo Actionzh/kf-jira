@@ -92,7 +92,7 @@ public class IssueServiceImpl implements IssueService {
 
                 ObjectNode customfield_10701 = fields.putObject("customfield_10701");
                 {
-                    customfield_10701.put("id", "10500");
+                    customfield_10701.put("value", "Customer issue");
                 }
                 // fields.put("customfield_10701", "10500");
                 ObjectNode reporter = fields.putObject("reporter");

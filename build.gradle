@@ -26,6 +26,9 @@ dependencies {
     //compileOnly 'com.atlassian.jira:jira-apis:7.0.0'
     compile 'org.apache.commons:commons-text:1.6'
     compile 'joda-time:joda-time'
+    compile group: 'com.alibaba', name: 'easyexcel', version: '2.1.6'
+    compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0")
+    compile "mysql:mysql-connector-java:5.1.45"
 }
 
 test {
