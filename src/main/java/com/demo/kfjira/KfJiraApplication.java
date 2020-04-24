@@ -1,6 +1,6 @@
 package com.demo.kfjira;
 
-import com.demo.kfjira.service.LoadQrCodeService;
+import com.demo.kfjira.service.LoadDataService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +14,7 @@ public class KfJiraApplication implements CommandLineRunner {
 
 
     @Resource
-    private LoadQrCodeService loadQrCodeService;
+    private LoadDataService loadDataService;
 
     public static void main(String[] args) {
         SpringApplication.run(KfJiraApplication.class, args);
@@ -23,6 +23,6 @@ public class KfJiraApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadQrCodeService.load();
+        //loadDataService.load();
     }
 }

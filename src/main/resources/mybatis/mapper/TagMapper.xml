@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.kfjira.mapper.TagMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.ContactGroupEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP"/>
+        <result column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
+        <result column="total" property="total" jdbcType="BIGINT"/>
+        <result column="group_type" property="groupType" jdbcType="VARCHAR"/>
+        <result column="ext1" property="ext1" jdbcType="VARCHAR"/>
+        <result column="ext2" property="ext2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="List">
+        INSERT INTO
+        contact_group
+        (version, date_created, last_updated, name, status, tenant_id, total, group_type)
+        VALUES
+        <foreach collection='datas' item='excel' separator=','>
+            (#{excel.version}, #{excel.dateCreated}, #{excel.lastUpdated}, #{excel.name},
+            #{excel.status}, #{excel.tenantId}, #{excel.total}, #{excel.groupType})
+        </foreach>
+    </insert>
+
+    <select id="selectByName" resultType="Integer">
+        SELECT
+        count(*)
+        FROM contact_group where tenant_id=#{tenantId} and name=#{name}
+    </select>
+
+</mapper>

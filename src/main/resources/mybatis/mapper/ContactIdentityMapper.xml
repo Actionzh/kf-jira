@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.kfjira.mapper.ContactIdentityMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.ContactIdentityEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="contact_id" property="contactId" jdbcType="BIGINT"/>
+        <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="channel_id" property="channelId" jdbcType="BIGINT"/>
+        <result column="anonymous_id" property="anonymousId" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="BIT"/>
+        <result column="external_id" property="externalId" jdbcType="VARCHAR"/>
+        <result column="original_id" property="originalId" jdbcType="BIGINT"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="com.demo.kfjira.entity.ContactIdentityEntity">
+        INSERT INTO
+        contact_identity
+        (version, anonymous_id, channel_id, contact_id, date_created, is_active,last_updated,mobile_phone,tenant_id,nickname,external_id)
+        VALUES
+            (#{version}, #{anonymousId}, #{channelId}, #{contactId},
+            #{dateCreated}, #{isActive}, #{lastUpdated}, #{mobilePhone},#{tenantId},
+            #{nickname},#{externalId})
+    </insert>
+
+    <select id="selectByOpenId" resultMap="BaseResultMap">
+        SELECT
+        id,contact_id,anonymous_id,is_active,mobile_phone,external_id,nickname
+        FROM contact_identity where tenant_id=#{tenantId} and channel_id=#{channelId} and anonymous_id=#{openId}
+    </select>
+
+
+    <update id="update" parameterType="java.util.ArrayList">
+        update contact_identity set
+        <if test="nickname != null">
+            nickname = #{nickname},
+        </if>
+        <if test="anonymousId != null">
+            anonymous_id = #{anonymousId},
+        </if>
+        <if test="id != null">
+            external_id = #{externalId},
+        </if>
+        where id = #{id}
+    </update>
+
+</mapper>

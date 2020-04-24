@@ -1,41 +1,27 @@
 package com.demo.kfjira.controller;
 
-import com.demo.kfjira.mapper.QrCodeMapper;
-import lombok.extern.slf4j.Slf4j;
+import com.demo.kfjira.service.LoadDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-@Slf4j
+@RestController
+@RequestMapping("load")
 public class LoadData {
 
 
     @Autowired
-    private QrCodeMapper qrCodeMapper;
+    private LoadDataService loadDataService;
 
-    public static void main(String[] args) throws FileNotFoundException {
-        long l = System.currentTimeMillis();
-
-        FileInputStream inputStream = new FileInputStream("/Users/edz/Desktop/lacoste_qrcode 二维码配置.xlsx");
-       /* try {
-            // 解析每行结果在listener中处理
-            ExcelListener listener = new ExcelListener();
-            ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLS, null, listener);
-            excelReader.read();*/
-
-        /*    EasyExcel.read(inputStream, LoadInfo.class, new ExcelListener()).sheet("QR code").doRead();
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        System.out.println(System.currentTimeMillis() - l);*/
+    @GetMapping("tag")
+    public void create() {
+        loadDataService.loadTag();
     }
+
+    @GetMapping("user")
+    public void createUser() {
+        loadDataService.loadUserInfo();
+    }
+
 }

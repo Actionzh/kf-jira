@@ -1,12 +1,11 @@
 package com.demo.kfjira.entity;
 
-import com.alibaba.excel.metadata.BaseRowModel;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class QrCodeEntity extends BaseRowModel {
+public class QrCodeEntity {
 
 
     private long version;

@@ -1,15 +1,16 @@
-package com.demo.kfjira.service;
+package com.demo.kfjira.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.demo.kfjira.entity.LoadInfo;
 import com.demo.kfjira.entity.QrCodeEntity;
 import com.demo.kfjira.mapper.QrCodeMapper;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExcelListener extends AnalysisEventListener<LoadInfo> {
+public class QrCodeListener extends AnalysisEventListener<LoadInfo> {
 
     private static final int BATCH_COUNT = 1000;
     //自定义用于暂时存储data。
@@ -17,9 +18,12 @@ public class ExcelListener extends AnalysisEventListener<LoadInfo> {
     private List<QrCodeEntity> datas = new ArrayList<>();
 
     private QrCodeMapper qrCodeMapper;
+    protected TransactionTemplate transactionTemplate;
 
-    public ExcelListener(QrCodeMapper qrCodeMapper) {
+
+    public QrCodeListener(QrCodeMapper qrCodeMapper, TransactionTemplate transactionTemplate) {
         this.qrCodeMapper = qrCodeMapper;
+        this.transactionTemplate = transactionTemplate;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class ExcelListener extends AnalysisEventListener<LoadInfo> {
 
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (datas.size() >= BATCH_COUNT) {
-            saveExcelByMyBatis();
+            //saveExcelByMyBatis();
             // 存储完成清理 list
             datas.clear();
         }
@@ -64,6 +68,6 @@ public class ExcelListener extends AnalysisEventListener<LoadInfo> {
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-        saveExcelByMyBatis();
+        //saveExcelByMyBatis();
     }
 }
