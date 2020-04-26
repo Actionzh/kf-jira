@@ -1,54 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.demo.kfjira.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.ContactGroupEntity">
+<mapper namespace="com.demo.kfjira.mapper.ContactGroupMemberMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.ContactGroupMemberEntity">
         <result column="id" property="id" jdbcType="BIGINT"/>
-        <result column="contact_id" property="contactId" jdbcType="BIGINT"/>
-        <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR"/>
-        <result column="email" property="email" jdbcType="VARCHAR"/>
-        <result column="channel_id" property="channelId" jdbcType="BIGINT"/>
-        <result column="anonymous_id" property="anonymousId" jdbcType="VARCHAR"/>
-        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
-        <result column="is_active" property="isActive" jdbcType="BIT"/>
-        <result column="external_id" property="externalId" jdbcType="VARCHAR"/>
-        <result column="original_id" property="originalId" jdbcType="BIGINT"/>
         <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="contact_group_id" property="contactGroupId" jdbcType="BIGINT"/>
+        <result column="contact_id" property="contactId" jdbcType="BIGINT"/>
+        <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP"/>
+        <result column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP"/>
+        <result column="sequence" property="sequence" jdbcType="INTEGER"/>
         <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
-        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
-        <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated"/>
     </resultMap>
 
-    <insert id="insertBatch" parameterType="List">
-        INSERT INTO
-        qrcode
-        (version, tenant_id, uuid, term, url, ticket,source,campaign,wechat_account,date_created,last_updated)
+    <insert id="insertBatch" parameterType="java.util.ArrayList">
+        replace INTO
+        contact_group_member
+        (version, contact_group_id, contact_id, date_created, last_updated, sequence,tenant_id)
         VALUES
         <foreach collection='datas' item='excel' separator=','>
-            (#{excel.version}, #{excel.tenantId}, #{excel.uuid}, #{excel.term},
-            #{excel.url}, #{excel.ticket}, #{excel.source}, #{excel.campaign},#{excel.wechatAccount},
-            #{excel.dateCreated},#{excel.lastUpdated})
+            (#{excel.version}, #{excel.contactGroupId}, #{excel.contactId}, #{excel.dateCreated},
+            #{excel.lastUpdated}, #{excel.sequence}, #{excel.tenantId})
         </foreach>
     </insert>
 
-    <select id="SelectByOpenId" resultMap="BaseResultMap">
-        SELECT
-        id,contact_id,anonymous_id,is_active,mobile_phone,external_id,nickname
-        FROM contact_identity where tenant_id=#{tenantId} and channel_id=#{channelId} and anonymous_id=#{openId}
-    </select>
-
-    <insert id="batchInsert" parameterType="java.util.ArrayList">
-        insert into wechat_media (media_id, `type`, title, author, content, create_time, update_time,
-        tenant_id,channel_id, date_created)
-        values
-        <foreach collection="list" item="entity" separator=",">
-            (#{entity.mediaId,jdbcType=VARCHAR}, #{entity.type,jdbcType=VARCHAR},
-            #{entity.title,jdbcType=VARCHAR},#{entity.author,jdbcType=VARCHAR},
-            #{entity.content,jdbcType=VARCHAR},#{entity.createTime},#{entity.updateTime},
-            #{entity.tenantId,jdbcType=BIGINT},#{entity.channelId,jdbcType=BIGINT}, now())
-        </foreach>
-        ON DUPLICATE KEY UPDATE
-        `title` = VALUES(`title`), `author` = VALUES(`author`),
-        `content` = VALUES(`content`), `create_time` = VALUES(`create_time`),
-        `update_time` = VALUES(`update_time`), `date_created` = now()
-    </insert>
 </mapper>

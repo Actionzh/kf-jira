@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.kfjira.mapper.EventUtmMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.EventUtmEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="campaign" property="campaign" jdbcType="VARCHAR"/>
+        <result column="medium" property="medium" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="term" property="term" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
+        <result column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP"/>
+        <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="sem_campaign" property="semCampaign" jdbcType="VARCHAR"/>
+        <result column="sem_group" property="semGroup" jdbcType="VARCHAR"/>
+        <result column="sem_account" property="semAccount" jdbcType="VARCHAR"/>
+        <result column="sem_keyword" property="semKeyword" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="java.util.ArrayList">
+        INSERT INTO
+        event_utm
+        (source,campaign,medium,content,term,tenant_id,
+        last_updated,date_created,version,sem_campaign,sem_group,sem_account,sem_keyword)
+        VALUES
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.source}, #{entity.campaign},#{entity.medium},#{entity.content},#{entity.term},
+            #{entity.tenantId}, #{entity.lastUpdated}, #{entity.dateCreated},#{entity.version},
+            #{entity.semCampaign}, #{entity.semGroup}, #{entity.semAccount}, #{entity.semKeyword})
+        </foreach>
+    </insert>
+
+    <insert id=" insertOne" parameterType="com.demo.kfjira.entity.EventUtmEntity" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        event_utm
+            (source,campaign,medium,content,term,tenant_id,
+            last_updated,date_created,version,sem_campaign,sem_group,sem_account,sem_keyword)
+        VALUES
+            (#{source}, #{campaign},#{medium},#{content},#{term},
+            #{tenantId}, #{lastUpdated}, #{dateCreated},#{version},
+            #{semCampaign}, #{semGroup}, #{semAccount}, #{semKeyword})
+    </insert>
+
+</mapper>

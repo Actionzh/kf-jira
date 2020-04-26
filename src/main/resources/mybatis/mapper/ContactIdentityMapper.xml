@@ -18,7 +18,8 @@
         <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated"/>
     </resultMap>
 
-    <insert id="insertOne" parameterType="com.demo.kfjira.entity.ContactIdentityEntity">
+    <insert id="insertOne" parameterType="com.demo.kfjira.entity.ContactIdentityEntity" useGeneratedKeys="true"
+            keyProperty="id">
         INSERT INTO
         contact_identity
         (version, anonymous_id, channel_id, contact_id, date_created, is_active,last_updated,mobile_phone,tenant_id,nickname,external_id)
@@ -28,9 +29,20 @@
             #{nickname},#{externalId})
     </insert>
 
+    <insert id="updateBatch" parameterType="java.util.ArrayList">
+        replace into contact_identity (id,version, anonymous_id, channel_id,
+        contact_id, is_active,date_created,last_updated,mobile_phone,tenant_id,nickname,external_id)
+        values
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.id}, #{entity.version}+1, #{entity.anonymousId}, #{entity.channelId},
+            #{entity.contactId}, #{entity.isActive},#{entity.dateCreated}, now(),#{entity.mobilePhone},
+            #{entity.tenantId},#{entity.nickname},#{entity.externalId})
+        </foreach>
+    </insert>
+
     <select id="selectByOpenId" resultMap="BaseResultMap">
         SELECT
-        id,contact_id,anonymous_id,is_active,mobile_phone,external_id,nickname
+        *
         FROM contact_identity where tenant_id=#{tenantId} and channel_id=#{channelId} and anonymous_id=#{openId}
     </select>
 

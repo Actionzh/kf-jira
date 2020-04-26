@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
+
 @RestController
 @RequestMapping("load")
 public class LoadData {
@@ -20,8 +22,30 @@ public class LoadData {
     }
 
     @GetMapping("user")
-    public void createUser() {
+    public void createUser() throws FileNotFoundException {
         loadDataService.loadUserInfo();
+    }
+
+    @GetMapping("groupmember")
+    public void createGroupMember() throws FileNotFoundException {
+        loadDataService.createGroupMember();
+    }
+
+    @GetMapping("qrcodeevent")
+    public void createQrcodeEvent() throws FileNotFoundException {
+        loadDataService.createQrcodeEvent();
+    }
+
+
+    @GetMapping("qrcode")
+
+    public void createQrcode() throws FileNotFoundException {
+        loadDataService.createGroupMember();
+    }
+
+    @GetMapping("userdata")
+    public void loadUserData() {
+        loadDataService.LoadUserData();
     }
 
 }

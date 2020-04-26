@@ -29,6 +29,8 @@ dependencies {
     compile group: 'com.alibaba', name: 'easyexcel', version: '2.1.6'
     compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0")
     compile "mysql:mysql-connector-java:5.1.45"
+    compile 'com.google.guava:guava:20.0'
+
 }
 
 test {

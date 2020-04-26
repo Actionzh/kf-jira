@@ -3,9 +3,7 @@ package com.demo.kfjira.service;
 import com.alibaba.excel.EasyExcel;
 import com.demo.kfjira.entity.LoadInfo;
 import com.demo.kfjira.entity.UserInfo;
-import com.demo.kfjira.listener.QrCodeListener;
-import com.demo.kfjira.listener.TagInfoListener;
-import com.demo.kfjira.listener.UserInfoListener;
+import com.demo.kfjira.listener.*;
 import com.demo.kfjira.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,6 +36,16 @@ public class LoadDataService implements InitializingBean {
     @Autowired
     protected PlatformTransactionManager transactionManager;
     protected TransactionTemplate transactionTemplate;
+    @Autowired
+    private ContactContentMapper contactContentMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
+    @Autowired
+    private EventUtmMapper eventUtmMapper;
+
+    @Autowired
+    private ContactGroupMemberMapper contactGroupMemberMapper;
 
     @Override
     public void afterPropertiesSet() {
@@ -58,6 +66,7 @@ public class LoadDataService implements InitializingBean {
 
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw e;
         } finally {
             try {
                 inputStream.close();
@@ -69,13 +78,79 @@ public class LoadDataService implements InitializingBean {
         System.out.println(System.currentTimeMillis() - l);
     }
 
-    public void loadUserInfo() {
+    public void loadUserInfo() throws FileNotFoundException {
+        long l = System.currentTimeMillis();
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream("/Users/edz/Desktop/数据迁移/用户列表_20200421164055 - for linkflow.xlsx");
+
+            EasyExcel.read(inputStream, UserInfo.class, new UserInfoListener(eventMapper, contactContentMapper, contactMapper, contactIdentityMapper, transactionTemplate)).sheet("Sheet0").doRead();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        System.out.println(System.currentTimeMillis() - l);
+    }
+
+    public void createGroupMember() throws FileNotFoundException {
+        long l = System.currentTimeMillis();
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream("/Users/edz/Desktop/数据迁移/用户列表_20200421164055 - for linkflow.xlsx");
+
+            EasyExcel.read(inputStream, UserInfo.class, new ContactGroupMemberListener(tagMapper, contactGroupMemberMapper, contactMapper, contactIdentityMapper)).sheet("Sheet0").doRead();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        System.out.println(System.currentTimeMillis() - l);
+    }
+
+    public void createQrcodeEvent() throws FileNotFoundException {
+        long l = System.currentTimeMillis();
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream("/Users/edz/Desktop/数据迁移/用户列表_20200421164055 - for linkflow.xlsx");
+
+            EasyExcel.read(inputStream, UserInfo.class, new QrcodeEventListener(eventMapper, eventUtmMapper, contactMapper, contactIdentityMapper)).sheet("Sheet0").doRead();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        System.out.println(System.currentTimeMillis() - l);
+    }
+
+    public void LoadUserData() {
         long l = System.currentTimeMillis();
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream("/Users/edz/Desktop/用户列表_20200421164055 - for linkflow.xlsx");
 
-            EasyExcel.read(inputStream, UserInfo.class, new UserInfoListener(userInfoMapper, contactMapper, contactIdentityMapper, transactionTemplate)).sheet("Sheet0").doRead();
+            EasyExcel.read(inputStream, UserInfo.class, new LoadUserDataListener(userInfoMapper)).sheet("Sheet0").doRead();
 
         } catch (Exception e) {
             log.error(e.getMessage());

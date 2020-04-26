@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.kfjira.mapper.EventMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.EventEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="anonymous_id" property="anonymousId" jdbcType="VARCHAR"/>
+        <result column="contact_identity_id" property="contactIdentityId" jdbcType="BIGINT"/>
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP"/>
+        <result column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP"/>
+        <result column="event_date" property="eventDate" jdbcType="TIMESTAMP"/>
+        <result column="channel_id" property="channelId" jdbcType="VARCHAR"/>
+        <result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+        <result column="event" property="event" jdbcType="VARCHAR"/>
+        <result column="event_id" property="eventId" jdbcType="VARCHAR"/>
+        <result column="context" property="context" jdbcType="VARCHAR"/>
+        <result column="sdk_version" property="sdkVersion" jdbcType="VARCHAR"/>
+        <result column="sdk_type" property="sdkType" jdbcType="VARCHAR"/>
+        <result column="platform" property="platform" jdbcType="VARCHAR"/>
+        <result column="screen_width" property="screenWidth" jdbcType="DECIMAL"/>
+        <result column="screen_height" property="screenHeight" jdbcType="DECIMAL"/>
+        <result column="app_version" property="appVersion" jdbcType="VARCHAR"/>
+        <result column="bundle_key" property="bundleKey" jdbcType="VARCHAR"/>
+        <result column="os" property="os" jdbcType="VARCHAR"/>
+        <result column="os_version" property="osVersion" jdbcType="VARCHAR"/>
+        <result column="browser" property="browser" jdbcType="VARCHAR"/>
+        <result column="browser_version" property="browserVersion" jdbcType="VARCHAR"/>
+        <result column="country" property="country" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="network_type" property="networkType" jdbcType="VARCHAR"/>
+        <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR"/>
+        <result column="device_model" property="deviceModel" jdbcType="VARCHAR"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="debug_mode" property="debugMode" jdbcType="BIT"/>
+        <result column="imei" property="imei" jdbcType="VARCHAR"/>
+        <result column="ip" property="ip" jdbcType="VARCHAR"/>
+        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
+        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
+        <result column="trigger_flow" property="triggerFlow" jdbcType="BIT"/>
+        <result column="channel_app_id" property="channelAppId" jdbcType="BIGINT"/>
+        <result column="attr1" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr2" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr3" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr4" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr5" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr6" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr7" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr8" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr9" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr10" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr11" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr12" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr13" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr14" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr15" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr16" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr17" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr18" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr19" property="attr1" jdbcType="VARCHAR"/>
+        <result column="attr20" property="attr1" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="com.demo.kfjira.entity.EventEntity" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        event
+        (anonymous_id,contact_identity_id,tenant_id,version,date_created,last_updated,
+        event_date,channel_id,channel_name,event,event_id,context,sdk_version,
+        sdk_type, platform,screen_width, screen_height,app_version, bundle_key,os,
+        os_version,browser, browser_version,country,province,city,network_type,
+        manufacturer,device_model,operator, debug_mode,imei,ip,latitude,
+        longitude,trigger_flow, channel_app_id,attr1 ,attr2,attr3,attr4,
+        attr5,attr6,attr7, attr8,attr9,attr10,attr11,
+        attr12,attr13, attr14,attr15,attr16,attr17,attr18,
+        attr19,attr20,parent_id)
+        VALUES
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.anonymousId}, #{entity.contactIdentityId},#{entity.tenantId},#{entity.version},
+            #{entity.dateCreated},#{entity.lastUpdated},
+            #{entity.eventDate},#{entity.channelId},#{entity.channelName},
+            #{entity.event}, #{entity.eventId},#{entity.context},#{entity.sdkVersion},
+            #{entity.sdkType},#{entity.platform}, #{entity.screenWidth},#{entity.screenHeight},#{entity.appVersion},
+            #{entity.bundleKey}, #{entity.os},#{entity.osVersion},#{entity.browser},#{entity.browserVersion},
+            #{entity.country}, #{entity.province},#{entity.city},#{entity.networkType},#{entity.manufacturer},
+            #{entity.deviceModel},#{entity.operator},#{entity.debugMode},#{entity.imei},#{entity.ip},
+            #{entity.latitude},#{entity.longitude},#{entity.triggerFlow},#{entity.channelAppId},
+            #{entity.attr1},#{entity.attr2},#{entity.attr3},#{entity.attr4},#{entity.attr5},
+            #{entity.attr6},#{entity.attr7},#{entity.attr8},#{entity.attr9}, #{entity.attr10},
+            #{entity.attr11},#{entity.attr12},#{entity.attr13},#{entity.attr14}, #{entity.attr15},
+            #{entity.attr16},#{entity.attr17},#{entity.attr18}, #{entity.attr19},#{entity.attr20},
+            #{entity.parentId})
+        </foreach>
+    </insert>
+
+    <insert id=" insertOne" parameterType="java.util.ArrayList">
+        replace into contact (id, mobile_phone,tenant_id,version, date_created,last_updated)
+        values
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.id}, #{entity.mobilePhone},#{entity.tenantId},version+1,#{dateCreated}, now())
+        </foreach>
+    </insert>
+
+</mapper>

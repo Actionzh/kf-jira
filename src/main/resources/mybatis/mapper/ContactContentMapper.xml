@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.kfjira.mapper.ContactContentMapper">
+    <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.ContactContentEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="property" property="property" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP"/>
+        <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="java.util.ArrayList">
+        replace into contact_content (id, property, version, last_updated,
+        date_created,tenant_id)
+        values
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.id}, #{entity.property}, 0, #{entity.lastUpdated}, #{entity.dateCreated}, #{entity.tenantId})
+        </foreach>
+    </insert>
+
+    <select id="selectByOpenId" resultMap="BaseResultMap">
+        SELECT
+        id,contact_id,anonymous_id,is_active,mobile_phone,external_id,nickname
+        FROM contact_identity where tenant_id=#{tenantId} and channel_id=#{channelId} and anonymous_id=#{openId}
+    </select>
+
+    <update id="update" parameterType="java.util.ArrayList">
+        update contact_identity set
+        <if test="nickname != null">
+            nickname = #{nickname},
+        </if>
+        <if test="anonymousId != null">
+            anonymous_id = #{anonymousId},
+        </if>
+        <if test="id != null">
+            external_id = #{externalId},
+        </if>
+        where id = #{id}
+    </update>
+
+</mapper>

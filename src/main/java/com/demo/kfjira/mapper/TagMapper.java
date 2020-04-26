@@ -11,6 +11,6 @@ public interface TagMapper {
 
     void insertBatch(@Param("datas") List<ContactGroupEntity> datas);
 
-    int selectByName(@Param("name") String name,
-                     @Param("tenantId") long tenantId);
+    ContactGroupEntity selectByName(@Param("name") String name,
+                                    @Param("tenantId") long tenantId);
 }

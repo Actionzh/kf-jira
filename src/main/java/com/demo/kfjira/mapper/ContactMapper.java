@@ -2,7 +2,6 @@ package com.demo.kfjira.mapper;
 
 
 import com.demo.kfjira.entity.ContactEntity;
-import com.demo.kfjira.entity.QrCodeEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public interface ContactMapper {
 
 
-    void insertBatch(@Param("datas") List<QrCodeEntity> datas);
+    void updateBatch(@Param("datas") List<ContactEntity> datas);
 
     int insertOne(ContactEntity contactEntity);
 

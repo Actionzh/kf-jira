@@ -26,9 +26,9 @@
         </foreach>
     </insert>
 
-    <select id="selectByName" resultType="Integer">
+    <select id="selectByName" resultMap="BaseResultMap">
         SELECT
-        count(*)
+        *
         FROM contact_group where tenant_id=#{tenantId} and name=#{name}
     </select>
 

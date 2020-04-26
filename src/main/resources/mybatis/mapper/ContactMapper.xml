@@ -45,26 +45,12 @@
             #{tenantId},#{nickname},#{isAnonymous})
     </insert>
 
-    <select id="SelectByOpenId" resultMap="BaseResultMap">
-        SELECT
-        id,contact_id,anonymous_id,is_active,mobile_phone,external_id,nickname
-        FROM contact_identity where tenant_id=#{tenantId} and channel_id=#{channelId} and anonymous_id=#{openId}
-    </select>
-
-    <insert id="batchInsert" parameterType="java.util.ArrayList">
-        insert into wechat_media (media_id, `type`, title, author, content, create_time, update_time,
-        tenant_id,channel_id, date_created)
+    <insert id="updateBatch" parameterType="java.util.ArrayList">
+        replace into contact (id, mobile_phone,tenant_id,version, date_created,last_updated)
         values
-        <foreach collection="list" item="entity" separator=",">
-            (#{entity.mediaId,jdbcType=VARCHAR}, #{entity.type,jdbcType=VARCHAR},
-            #{entity.title,jdbcType=VARCHAR},#{entity.author,jdbcType=VARCHAR},
-            #{entity.content,jdbcType=VARCHAR},#{entity.createTime},#{entity.updateTime},
-            #{entity.tenantId,jdbcType=BIGINT},#{entity.channelId,jdbcType=BIGINT}, now())
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.id}, #{entity.mobilePhone},#{entity.tenantId},version+1,#{dateCreated}, now())
         </foreach>
-        ON DUPLICATE KEY UPDATE
-        `title` = VALUES(`title`), `author` = VALUES(`author`),
-        `content` = VALUES(`content`), `create_time` = VALUES(`create_time`),
-        `update_time` = VALUES(`update_time`), `date_created` = now()
     </insert>
 
     <update id="updatePhoneById">
