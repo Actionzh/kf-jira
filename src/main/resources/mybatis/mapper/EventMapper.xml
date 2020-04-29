@@ -95,12 +95,34 @@
         </foreach>
     </insert>
 
-    <insert id=" insertOne" parameterType="java.util.ArrayList">
-        replace into contact (id, mobile_phone,tenant_id,version, date_created,last_updated)
-        values
-        <foreach collection="datas" item="entity" separator=",">
-            (#{entity.id}, #{entity.mobilePhone},#{entity.tenantId},version+1,#{dateCreated}, now())
-        </foreach>
+    <insert id="insertOne" parameterType="com.demo.kfjira.entity.EventEntity" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        event
+        (anonymous_id,contact_identity_id,tenant_id,version,date_created,last_updated,
+        event_date,channel_id,channel_name,event,event_id,context,sdk_version,
+        sdk_type, platform,screen_width, screen_height,app_version, bundle_key,os,
+        os_version,browser, browser_version,country,province,city,network_type,
+        manufacturer,device_model,operator, debug_mode,imei,ip,latitude,
+        longitude,trigger_flow, channel_app_id,attr1 ,attr2,attr3,attr4,
+        attr5,attr6,attr7, attr8,attr9,attr10,attr11,
+        attr12,attr13, attr14,attr15,attr16,attr17,attr18,
+        attr19,attr20,parent_id)
+        VALUES
+            (#{anonymousId}, #{contactIdentityId},#{tenantId},#{version},
+            #{dateCreated},#{lastUpdated},
+            #{eventDate},#{channelId},#{channelName},
+            #{event}, #{eventId},#{context},#{sdkVersion},
+            #{sdkType},#{platform}, #{screenWidth},#{screenHeight},#{appVersion},
+            #{bundleKey}, #{os},#{osVersion},#{browser},#{browserVersion},
+            #{country}, #{province},#{city},#{networkType},#{manufacturer},
+            #{deviceModel},#{operator},#{debugMode},#{imei},#{ip},
+            #{latitude},#{longitude},#{triggerFlow},#{channelAppId},
+            #{attr1},#{attr2},#{attr3},#{attr4},#{attr5},
+            #{attr6},#{attr7},#{attr8},#{attr9}, #{attr10},
+            #{attr11},#{attr12},#{attr13},#{attr14}, #{attr15},
+            #{attr16},#{attr17},#{attr18}, #{attr19},#{attr20},
+            #{parentId})
     </insert>
 
 </mapper>

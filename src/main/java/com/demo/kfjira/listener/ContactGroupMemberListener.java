@@ -11,36 +11,38 @@ import com.demo.kfjira.mapper.ContactIdentityMapper;
 import com.demo.kfjira.mapper.ContactMapper;
 import com.demo.kfjira.mapper.TagMapper;
 import com.demo.kfjira.utils.JsonMapper;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.ListIterator;
+import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
+@Slf4j
 public class ContactGroupMemberListener extends AnalysisEventListener<UserInfo> {
 
-    private static final int BATCH_COUNT = 1000;
+    private static final int BATCH_COUNT = 1500;
+    private static final int THREAD_NUM = 15;
 
     private ContactMapper contactMapper;
     private ContactIdentityMapper contactIdentityMapper;
-    private static ExecutorService executor = null;
     private final static JsonMapper jsonMapper = JsonMapper.INSTANCE;
-    private List<ContactGroupMemberEntity> contactGroupMemberEntities = new ArrayList<>();
+    private Vector<ContactGroupMemberEntity> contactGroupMemberEntities = new Vector<>();
+    private List<UserInfo> userInfos = new ArrayList<>();
+
     private ContactGroupMemberMapper contactGroupMemberMapper;
     private TagMapper tagMapper;
+    private ExecutorService executor;
 
-    @PostConstruct
-    public void init() {
-        ThreadFactory factory = (new ThreadFactoryBuilder())
-                .setNameFormat("identity-svc-%d")
-                .build();
-        executor = new ThreadPoolExecutor(5, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000), factory, new ThreadPoolExecutor.AbortPolicy());
-    }
-
-    public ContactGroupMemberListener(TagMapper tagMapper, ContactGroupMemberMapper contactGroupMemberMapper,
-                                      ContactMapper contactMapper, ContactIdentityMapper contactIdentityMapper) {
+    public ContactGroupMemberListener(ExecutorService executor,
+                                      TagMapper tagMapper,
+                                      ContactGroupMemberMapper contactGroupMemberMapper,
+                                      ContactMapper contactMapper,
+                                      ContactIdentityMapper contactIdentityMapper) {
+        this.executor = executor;
         this.tagMapper = tagMapper;
         this.contactGroupMemberMapper = contactGroupMemberMapper;
         this.contactMapper = contactMapper;
@@ -49,14 +51,41 @@ public class ContactGroupMemberListener extends AnalysisEventListener<UserInfo> 
 
     @Override
     public void invoke(UserInfo userInfo, AnalysisContext context) {
-        System.out.println("当前行：" + context.currentReadHolder());
-        System.out.println(userInfo);
-        if (userInfo.getTag() != null) {
-            ContactIdentityEntity contactIdentityEntity = contactIdentityMapper.selectByOpenId(userInfo.getOpenId(), 417, 1394);
-            if (contactIdentityEntity != null && contactIdentityEntity.getContactId() != null) {
-                convertToContactGroupMemberMapper(contactIdentityEntity.getContactId(), userInfo);
+        //System.out.println("当前行：" + context.currentReadHolder());
+        //System.out.println(userInfo);
+        userInfos.add(userInfo);
+
+        if (userInfos.size() >= BATCH_COUNT) {
+            log.info("enter batch exec:" + context.readRowHolder().getRowIndex());
+            long Start = System.currentTimeMillis();
+            CountDownLatch cd = new CountDownLatch(THREAD_NUM);
+            for (int i = 1; i <= THREAD_NUM; i++) {
+                List<UserInfo> subUserInfos = this.userInfos.subList(BATCH_COUNT / THREAD_NUM * (i - 1), BATCH_COUNT / THREAD_NUM * i);
+
+                executor.submit(() -> {
+                    ListIterator<UserInfo> subUserInfoListIterator = subUserInfos.listIterator();
+
+                    while (subUserInfoListIterator.hasNext()) {
+                        UserInfo next = subUserInfoListIterator.next();
+                        if (next != null && next.getTag() != null) {
+                            ContactIdentityEntity contactIdentityEntity = contactIdentityMapper.selectByOpenId(next.getOpenId(), 417, 1394);
+                            if (contactIdentityEntity != null && contactIdentityEntity.getContactId() != null) {
+                                convertToContactGroupMemberMapper(contactIdentityEntity.getContactId(), next);
+                            }
+                        }
+                    }
+                    cd.countDown();
+                });
+            }
+            try {
+                cd.await();
+                userInfos.clear();
+                System.out.println("ContactGroupMemberListener times=====" + (System.currentTimeMillis() - Start));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+
         //批量插入ContactContent
         if (contactGroupMemberEntities.size() >= BATCH_COUNT) {
             saveContactGroupMemberByMyBatis();

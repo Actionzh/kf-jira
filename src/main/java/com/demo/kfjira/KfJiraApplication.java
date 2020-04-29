@@ -5,10 +5,13 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import javax.annotation.Resource;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class
+})
 @MapperScan("com.demo.kfjira.mapper")
 public class KfJiraApplication implements CommandLineRunner {
 

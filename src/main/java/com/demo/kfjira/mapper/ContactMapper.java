@@ -13,10 +13,11 @@ public interface ContactMapper {
 
     int insertOne(ContactEntity contactEntity);
 
+    void insertBatch(@Param("datas") List<ContactEntity> datas);
+
     void updatePhoneById(@Param("id") Long id,
                          @Param("phone") String phone);
 
-    ContactEntity SelectByOpenId(@Param("openId") String openId,
-                                 @Param("tenantId") String tenantId,
-                                 @Param("channelId") String channelId);
+    ContactEntity selectById(@Param("tenantId") Long tenantId,
+                             @Param("id") Long id);
 }

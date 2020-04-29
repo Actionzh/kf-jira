@@ -45,15 +45,36 @@
             #{tenantId},#{nickname},#{isAnonymous})
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.ArrayList" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        contact
+        (version, anonymous_id, city, date_created, gender,
+        last_updated,mobile_phone,name,state,tenant_id,nickname,is_anonymous)
+        VALUES
+        <foreach collection="datas" item="entity" separator=",">
+            (#{entity.version}, #{entity.anonymousId}, #{entity.city}, #{entity.dateCreated},
+            #{entity.gender}, #{entity.lastUpdated}, #{entity.mobilePhone}, #{entity.name},#{entity.state},
+            #{entity.tenantId},#{entity.nickname},#{entity.isAnonymous})
+        </foreach>
+    </insert>
+
     <insert id="updateBatch" parameterType="java.util.ArrayList">
-        replace into contact (id, mobile_phone,tenant_id,version, date_created,last_updated)
+        replace into contact (id, version, anonymous_id, city, date_created, gender,
+        last_updated,mobile_phone,name,state,tenant_id,nickname,is_anonymous)
         values
         <foreach collection="datas" item="entity" separator=",">
-            (#{entity.id}, #{entity.mobilePhone},#{entity.tenantId},version+1,#{dateCreated}, now())
+            (#{entity.id},#{entity.version}+1, #{entity.anonymousId}, #{entity.city}, #{entity.dateCreated},
+            #{entity.gender}, now(), #{entity.mobilePhone}, #{entity.name},#{entity.state},
+            #{entity.tenantId},#{entity.nickname},#{entity.isAnonymous})
         </foreach>
     </insert>
 
     <update id="updatePhoneById">
-        update contact set mobile_phone = #{phone} where id = #{id}
+        update contact set mobile_phone = #{phone}, last_updated=now(), version=version+1 where id = #{id}
     </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from contact where tenant_id=#{tenantId} and id = #{id}
+    </select>
 </mapper>

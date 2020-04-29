@@ -5,6 +5,8 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.demo.kfjira.entity.LoadInfo;
 import com.demo.kfjira.entity.QrCodeEntity;
 import com.demo.kfjira.mapper.QrCodeMapper;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
@@ -45,8 +47,8 @@ public class QrCodeListener extends AnalysisEventListener<LoadInfo> {
 
     private QrCodeEntity convertToEntity(LoadInfo object) {
         return QrCodeEntity.builder().version(0)
-                .dateCreated(object.getCreated_at())
-                .lastUpdated(object.getCreated_at())
+                .dateCreated(DateTime.parse(object.getCreated_at(), DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")))
+                .lastUpdated(DateTime.parse(object.getCreated_at(), DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")))
                 .tenantId(417)
                 .uuid(object.getScene())
                 .term(object.getName())

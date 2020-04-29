@@ -10,4 +10,7 @@ public interface QrCodeMapper {
 
 
     void insertBatch(@Param("datas") List<QrCodeEntity> datas);
+
+    QrCodeEntity selectByUUID(@Param("uuid") String uuid,
+                              @Param("tenantId") Long tenantId);
 }

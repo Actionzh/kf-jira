@@ -31,14 +31,14 @@
         </foreach>
     </insert>
 
-    <insert id=" insertOne" parameterType="com.demo.kfjira.entity.EventUtmEntity" useGeneratedKeys="true"
+    <insert id="insertOne" parameterType="com.demo.kfjira.entity.EventUtmEntity" useGeneratedKeys="true"
             keyProperty="id">
-        INSERT INTO
+        replace INTO
         event_utm
-            (source,campaign,medium,content,term,tenant_id,
+            (id,source,campaign,medium,content,term,tenant_id,
             last_updated,date_created,version,sem_campaign,sem_group,sem_account,sem_keyword)
         VALUES
-            (#{source}, #{campaign},#{medium},#{content},#{term},
+            (#{id},#{source}, #{campaign},#{medium},#{content},#{term},
             #{tenantId}, #{lastUpdated}, #{dateCreated},#{version},
             #{semCampaign}, #{semGroup}, #{semAccount}, #{semKeyword})
     </insert>

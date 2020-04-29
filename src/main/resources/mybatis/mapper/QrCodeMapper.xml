@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.demo.kfjira.mapper.QrCodeMapper">
     <resultMap id="BaseResultMap" type="com.demo.kfjira.entity.QrCodeEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="version" property="version" jdbcType="BIGINT"/>
         <result column="tenant_id" property="tenantId" jdbcType="BIGINT"/>
         <result column="uuid" property="uuid" jdbcType="VARCHAR"/>
@@ -10,6 +11,8 @@
         <result column="ticket" property="ticket" jdbcType="VARCHAR"/>
         <result column="source" property="source" jdbcType="VARCHAR"/>
         <result column="campaign" property="campaign" jdbcType="VARCHAR"/>
+        <result column="medium" property="medium" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
         <result column="wechat_account" property="wechatAccount" jdbcType="VARCHAR"/>
         <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
         <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated"/>
@@ -26,6 +29,15 @@
             #{excel.dateCreated},#{excel.lastUpdated})
         </foreach>
     </insert>
+
+
+    <select id="selectByUUID" resultMap="BaseResultMap">
+        select id, version,tenant_id,uuid,term,url ,ticket,source,campaign,medium,content,wechat_account,
+          date_created,last_updated
+        from
+          qrcode
+        where tenant_id=#{tenantId} and uuid=#{uuid}
+    </select>
 
 
 </mapper>
